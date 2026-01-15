@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="5" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
  <tileset firstgid="1" name="spritepaint (5)" tilewidth="64" tileheight="64" tilecount="16" columns="4">
   <image source="../../Downloads/spritepaint (5).png" width="256" height="256"/>
  </tileset>
  <tileset firstgid="17" name="spritepaint (7)" tilewidth="64" tileheight="64" tilecount="16" columns="4">
   <image source="../../Downloads/spritepaint (7).png" width="256" height="256"/>
  </tileset>
- <tileset firstgid="33" name="bamboo" tilewidth="64" tileheight="64" tilecount="3" columns="1">
-  <image source="../../Downloads/spritepaint (13).png" width="96" height="192"/>
+ <tileset firstgid="33" name="spritepaint (25)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
+  <image source="../../Downloads/spritepaint (25).png" width="384" height="192"/>
+ </tileset>
+ <tileset firstgid="51" name="spritepaint (26)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
+  <image source="../../Downloads/spritepaint (26).png" width="384" height="192"/>
  </tileset>
  <layer id="1" name="collisions" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMNwAIxAzoWFmOtjLCsRsaJidDvaOgsEPsKVJWmNQmseWJmmNQWkeAPSQASE=
+   eJxjYBgYwDRA9rKN2jtq76i9o/aOAHsZGSDlLDJmpoO9rFD9yJidDvZSAkbtpQ/AliZpjUFpHluapDUGpXkA3v4Bgw==
   </data>
  </layer>
  <layer id="2" name="coins" width="30" height="20">
@@ -21,12 +24,17 @@
  </layer>
  <layer id="3" name="fon" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwUACFgJ8WunnAGIeND464EGj0fUjq8Omf6QCAIRgAGE=
+   eJxjYBgFo2AUjIJRMApGwUACFgJ8WunnAGIeND464EGj0fUjq4PxnYDYGYhdiHTHcAQATWcBKg==
   </data>
  </layer>
- <layer id="4" name="platforms" width="30" height="20">
+ <layer id="4" name="ladders" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDBWgOED2Ko3aO2rvqL2j9pIIlAfI3sECAOd8AXc=
+   eJxjYBgFo2AUDBWgOED2qo/aO2rvqL2j9pII7AfI3sECAJoDAcA=
+  </data>
+ </layer>
+ <layer id="5" name="ladder_top" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDAWgAsSqQKw20A4ZBaNgFIyCUUAQAACAxgBw
   </data>
  </layer>
 </map>

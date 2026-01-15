@@ -52,9 +52,12 @@ class Player(arcade.Sprite):
         self.direction = True
 
         self.texture = self.right_texture
+
         # Начальная позиция
         self.center_x = 400
         self.center_y = 200
+        self.feet_hitbox = arcade.LBWH(self.left + 20, self.bottom - 8, 41, 3)
+        self.feets = [self.left + 20, self.bottom - 8, 41, 3]
 
         self.speed = 150
 
@@ -86,6 +89,7 @@ class Player(arcade.Sprite):
     def update(self, delta_time, pressed_keys) -> None:
         # Передвижение героя
         self.update_movement(delta_time, pressed_keys)
+
 
         if self.is_attacking:
             # Если персонаж атаковал, увеличиваем время ожидания анимации до 2 секунд
@@ -121,7 +125,6 @@ class Player(arcade.Sprite):
             if self.direction == -1:
                 self.direction = 1
                 self.texture = self.right_texture
-
             dx = self.speed * delta_time
 
         if dx == 0:
@@ -145,6 +148,9 @@ class Player(arcade.Sprite):
             self.staying_duration = 2
 
         self.center_x += dx
+        self.feet_hitbox = arcade.LBWH(self.left + 20, self.bottom - 2, 41, 3)
+        self.feets = [self.left + 20, self.bottom - 2, 41, 3]
+
 
     def attack(self, create_bullet_callback: Callable):
         if self.is_reload:
@@ -182,9 +188,21 @@ class Player(arcade.Sprite):
                 self.shot_count = 0
 
 
+class BetterPhysicEngine:
+    def __init__(self, player: Player, walls: arcade.SpriteList, platforms: arcade.SpriteList):
+        self.player = player
+        self.target_sprites = walls
+        self.platforms = platforms
+
+    def can_jump(self):
+        walls = arcade.get_sprites_in_rect(self.player.feet_hitbox, self.target_sprites)
+        platforms = arcade.get_sprites_in_rect(self.player.feet_hitbox, self.platforms)
+        return len(walls) > 0 or len(platforms) > 0
+
+
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
-        super().__init__(width, height, title, fullscreen=True)
+        super().__init__(width, height, title)
         self.tile_map = arcade.load_tilemap("test.tmx")
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
         arcade.set_background_color(arcade.color.DARK_IMPERIAL_BLUE)
@@ -194,14 +212,21 @@ class MyGame(arcade.Window):
 
         self.coins_list = self.scene["coins"]
         self.coin_catching_sound = arcade.load_sound("assets/sounds/Звук начисления очков или бонусных баллов.mp3")
+
+        self.walls = self.scene["collisions"]
         self.platforms = arcade.SpriteList()
+
         plat = arcade.Sprite("assets/platform.png")
-        plat.left = 1536
+        plat.left = 200
         plat.bottom = 192
         plat.boundary_top = 600
         plat.boundary_bottom = 192
         plat.change_y = 2
         self.platforms.append(plat)
+
+        self.ladders_top = self.scene["ladder_top"]
+        self.last_top = False
+        self.move_down = False
 
         self.world_camera = arcade.camera.Camera2D()
         self.last_y = 0
@@ -219,13 +244,14 @@ class MyGame(arcade.Window):
         self.last_y = -1
 
         self.bullets_list = arcade.SpriteList()
-
         self.enemies_list = arcade.SpriteList()
 
         self.pressed_keys = set() # Для хранения нажатых кнопок
         # arcade.schedule(self.spawn_enemies, 1.5)
 
-        self.engine = arcade.PhysicsEnginePlatformer(player_sprite=self.player, gravity_constant=1, walls=self.scene["collisions"], platforms=self.platforms)
+        self.engine = arcade.PhysicsEnginePlatformer(player_sprite=self.player, gravity_constant=1, walls=self.walls, platforms=self.platforms, ladders=self.scene["ladders"])
+        self.better_engine = BetterPhysicEngine(self.player, self.walls, self.platforms)
+
         self.batch = Batch()
         self.coins_count = 0
         self.text_score = arcade.Text("Монеты: 0", 100, self.height - 20, arcade.color.WHITE, 24, anchor_x="left", anchor_y="top", batch=self.batch)
@@ -240,6 +266,8 @@ class MyGame(arcade.Window):
         self.bullets_list.draw()
         self.enemies_list.draw()
         self.platforms.draw()
+        arcade.draw_lbwh_rectangle_outline(*self.player.feets, arcade.color.RED)
+        self.player.draw_hit_box()
 
         self.gui_camera.use()
 
@@ -268,13 +296,41 @@ class MyGame(arcade.Window):
         for enemy in self.enemies_list:
             enemy.update()
 
-        grounded = self.engine.can_jump(y_distance=6)
+        on_ladders = False
+        player_feet_hitbox = arcade.LBWH(self.player.left, self.player.bottom - 1, self.player.width, 3)
+        top = arcade.get_sprites_in_rect(player_feet_hitbox, self.ladders_top)
+        if top:
+            self.last_top = top[0]
+            if self.move_down:
+                self.player.change_y = -4
+                if top[0] in self.walls:
+                    self.walls.remove(top[0])
+            else:
+                if top[0] not in self.walls:
+                    self.walls.append(top[0])
+        else:
+            # if self.last_top and self.last_top in self.walls:
+            #     self.walls.remove(self.last_top)
+            on_ladders = self.engine.is_on_ladder()
+            if on_ladders:
+                if self.player_is_jump:
+                    self.player.change_y = 4
+                else:
+                    self.player.change_y = -2
+
+                if self.move_down:
+                    self.player.change_y = -4
+
         camera_position = (self.player.center_x, self.player.center_y)
+        grounded = self.engine.can_jump(y_distance=6) and self.better_engine.can_jump()
         if grounded:
             self.jump_count = 1
             self.time_since_grounded = 0
         else:
-            camera_position = (self.player.center_x, self.last_y)
+            # Если игрок не на земле - он либо падает, либо поднимается по лестнице
+            # Если игрок падает - не меняем положение камеры по y
+            if not on_ladders:
+                camera_position = (self.player.center_x, self.last_y)
             self.time_since_grounded += delta_time
 
         if self.jump_buffer_time > 0:
@@ -284,10 +340,9 @@ class MyGame(arcade.Window):
 
         if want_jump:
             can_coyote = (self.time_since_grounded <= 0.3)
-            if grounded or can_coyote:
+            if grounded or can_coyote and not on_ladders:
                 camera_position = (self.player.center_x, self.last_y)
                 self.engine.jump(15)
-
                 self.jump_buffer_time = 0
 
         self.engine.update()
@@ -314,6 +369,8 @@ class MyGame(arcade.Window):
             self.player.make_dash()
         elif symbol == arcade.key.W:
             self.player_is_jump = True
+        elif symbol == arcade.key.S:
+            self.move_down = True
         elif symbol == arcade.key.ESCAPE:
             self.close()
         self.pressed_keys.add(symbol)
@@ -323,6 +380,8 @@ class MyGame(arcade.Window):
             self.player_is_jump = False
             if self.player.change_y > 0:
                 self.player.change_y *= 0.45
+        elif symbol == arcade.key.S:
+            self.move_down = False
         self.pressed_keys.remove(symbol)
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> EVENT_HANDLE_STATE:
