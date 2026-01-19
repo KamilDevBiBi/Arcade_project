@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="7" nextobjectid="1">
+ <tileset firstgid="1" name="spritepaint (5)" tilewidth="64" tileheight="64" tilecount="16" columns="4">
+  <image source="../../Downloads/spritepaint (5).png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="17" name="spritepaint (25)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
+  <image source="../../Downloads/spritepaint (25).png" width="384" height="192"/>
+ </tileset>
+ <tileset firstgid="35" name="New Piskel-1.png (7)" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="../../Downloads/New Piskel-1.png (7).png" width="64" height="64"/>
+ </tileset>
+ <layer id="1" name="collisions" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztlUEKgDAMBFPF+v8fexLTJY0oRZOyA3tKaDuHNCJzUP9+wACq0CMS9IgFPWKRyWNRWaGWyWOT67071DJ5eNDjW4q084FzksVDz4bOOSdZPO6gRyxm8rD+AS+4S4tTs3repHeu9nga3KXenrV6RtxpeRx1DwJE
+  </data>
+ </layer>
+ <layer id="2" name="ladders" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztz0ENACAQA0Es8OKFf5uYuKQNmVGwuxYAZO10wJCTDhjio4uPLj66/PJx0wHUeOUMAOc=
+  </data>
+ </layer>
+ <layer id="3" name="ladder_top" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzjENAAAIBDFEAP6lgotf2uT2qwKAnP7m2/QIAEDYAUuiAEA=
+  </data>
+ </layer>
+ <layer id="4" name="fon" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzCEOACAMBMEKRAX/fy+WEEgAA2JGVfQ2AgAA4D/l896oLu7c+D+R3XbWuO3yXgPVsABh
+  </data>
+ </layer>
+ <layer id="5" name="coins" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0TEKACAMBMG0+f+H7UUrCcIxU10X2FQBAOTpkBsptPrn1N4/5uxtX1v3ZZNpAT//AFI=
+  </data>
+ </layer>
+ <layer id="6" name="finish" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzjENAAAIA7B5wb9HLOwjIa2CJgDw11wHAABKC0DXACQ=
+  </data>
+ </layer>
+</map>

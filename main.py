@@ -17,6 +17,7 @@ COYOTE_TIME = 0.08
 JUMP_SPEED = 24
 JUMP_BUFFER = 0.12
 
+
 class DamageNumber(arcade.Sprite):
     def __init__(self, center_x, center_y, cur_damage: int):
         super().__init__()
@@ -36,16 +37,23 @@ class DamageNumber(arcade.Sprite):
 
 
 class Enemy(arcade.Sprite):
-    def __init__(self):
+    def __init__(self, level_num):
         super().__init__()
         monster_type = randint(1, 3)
         base_texture = arcade.load_texture(f"assets/monsters/monster_{monster_type}.png")
         self.texture = base_texture.flip_horizontally()
         self.defeated_texture = arcade.load_texture(f"assets/monsters/defeated_monster_{monster_type}.png")
 
+        if level_num == 1:
+            self.center_x = 550
+        else:
+            self.center_x = 2350
 
-        self.center_x = 550
-        self.center_y = 162
+        if level_num != 3:
+            self.center_y = 162
+        else:
+            self.center_y = 14 * 64 + self.height / 2
+
         self.change_x = randint(70, 110)
         self.direction = -1 # -1 или 1 (влево или вправо)
 
@@ -94,6 +102,9 @@ class Enemy(arcade.Sprite):
                 self.can_attack = True
                 self.reload_timer = 2
 
+        if self.top <= 0:
+            self.remove_from_sprite_lists()
+
     def process_bullet_hit(self, cur_damage: int):
         self.is_hitted = True
 
@@ -127,7 +138,7 @@ class Bullet(arcade.Sprite):
 
     def update(self, delta_time: float = 1 / 60, *args, **kwargs) -> None:
         self.center_x += self.change_x * self.direction * delta_time
-        if self.center_x + self.width / 2 <= 0 or self.center_x - self.width / 2 >= 30 * 64:
+        if self.center_x + self.width / 2 <= 0 or self.center_x - self.width / 2 >= 50 * 64:
             self.remove_from_sprite_lists()
 
 
@@ -148,7 +159,7 @@ class Player(arcade.Sprite):
         self.dash_sound = arcade.load_sound("assets/sounds/waving-a-blanket-over-camping-gear (mp3cut.net).mp3")
 
         # Начальная позиция
-        self.center_x = 400
+        self.center_x = 250
         self.center_y = 200
 
         self.feet_hitbox = arcade.LBWH(self.left + 20, self.bottom - 5, 41, 6)
@@ -160,7 +171,7 @@ class Player(arcade.Sprite):
         health_num, damage_num, reload_num = player_data[1:4]
 
         # значения на нулевом и 1, 2, 3 уровни
-        health_levels = [10, 13, 17, 22]
+        health_levels = [5, 8, 12, 15]
         damage_levels = [(4, 5), (5, 5), (5, 6), (6, 7)]
         reload_levels = [3, 2.5, 2, 1]
 
@@ -380,8 +391,9 @@ class MyGame(arcade.View):
     def __init__(self, level_num, user_id):
         super().__init__()
         self.user_id = user_id
+        self.level_num = level_num
 
-        self.tile_map = arcade.load_tilemap("test.tmx")
+        self.tile_map = arcade.load_tilemap(f"test_{level_num}.tmx")
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
         arcade.set_background_color(arcade.color.BLUE_SAPPHIRE)
 
@@ -403,7 +415,12 @@ class MyGame(arcade.View):
         self.platforms = arcade.SpriteList()
 
         plat = arcade.Sprite("assets/platform.png")
-        plat.left = 200
+        if level_num == 1:
+            plat.left = 200
+        elif level_num == 2:
+            plat.left = 2300
+        else:
+            plat.left = -1000
         plat.bottom = 252
         plat.boundary_top = 600
         plat.boundary_bottom = 252
@@ -437,7 +454,7 @@ class MyGame(arcade.View):
         self.settings.append(setting)
 
         self.pressed_keys = set() # Для хранения нажатых кнопок
-        arcade.schedule(self.spawn_enemies, 4)
+        arcade.schedule(self.spawn_enemies, 4 if self.level_num != 3 else 2.5)
 
         self.engine = arcade.PhysicsEnginePlatformer(player_sprite=self.player, gravity_constant=GRAVITY, walls=self.walls, platforms=self.platforms)
         self.better_engine = BetterPhysicEngine(self.player, self.walls, self.platforms, self.ladders_top, self.scene["ladders"], self.finish_list)
@@ -516,7 +533,8 @@ class MyGame(arcade.View):
         if finish:
             con = sqlite3.connect("player.db")
             cursor = con.cursor()
-            cursor.execute("UPDATE players SET money = ?", (self.coins_count, ))
+            last_money = cursor.execute("SELECT money FROM players WHERE id = ?", (self.user_id, )).fetchone()[0]
+            cursor.execute("UPDATE players SET money = ?", (self.coins_count + last_money, ))
             con.commit()
 
             self.win_sound.play()
@@ -537,6 +555,12 @@ class MyGame(arcade.View):
 
         for number in self.damage_numbers_list:
             number.update(delta_time)
+
+        if self.player.top <= 0:
+            self.game_over_sound.play()
+
+            menu = MenuView()
+            self.window.show_view(menu)
 
         # Если спрайт верхушки лестницы существует (то есть находится в списке стен)
         if len(self.last_top) > 0:
@@ -686,7 +710,7 @@ class MyGame(arcade.View):
         self.bullets_list.append(bullet)
 
     def spawn_enemies(self, delta_time):
-        enemy = Enemy()
+        enemy = Enemy(self.level_num)
         self.enemies_list.append(enemy)
 
 
@@ -716,8 +740,8 @@ class MenuView(arcade.View):
         else:
             con = sqlite3.connect("player.db")
             cursor = con.cursor()
-            cursor.execute("INSERT INTO players (health_level, damage_level, reload_level, money) VALUES (?, ?, ?, ?)",
-                           (0, 0, 0, 0))
+            cursor.execute("INSERT INTO players (health_level, damage_level, reload_level, money, last_level) VALUES (?, ?, ?, ?, ?)",
+                           (0, 0, 0, 0, 1))
             con.commit()
 
             user_id = cursor.lastrowid
@@ -751,7 +775,12 @@ class MenuView(arcade.View):
         self.manager.draw()
 
     def start_game(self, event):
-        game_view = MyGame(1, self.user_id)
+        con = sqlite3.connect("player.db")
+        cursor = con.cursor()
+        # Открываем последний уровень, на который зашел игрок
+        last_level = cursor.execute("SELECT last_level FROM players WHERE id = ?", (self.user_id, )).fetchone()[0]
+        game_view = MyGame(last_level, self.user_id)
+
         game_view.setup()
         self.manager.disable()
         self.window.show_view(game_view)
@@ -832,6 +861,7 @@ class PauseView(arcade.View):
             self.manager.disable()
             self.window.show_view(menu)
 
+
 class LevelsView(arcade.View):
     def __init__(self, user_id):
         super().__init__()
@@ -871,6 +901,11 @@ class LevelsView(arcade.View):
         self.manager.draw()
 
     def start_selected_level(self, level_num):
+        con = sqlite3.connect("player.db")
+        cursor = con.cursor()
+        cursor.execute("UPDATE players SET last_level = ? WHERE id = ?", (level_num, self.user_id))
+        con.commit()
+
         game = MyGame(level_num, self.user_id)
         game.setup()
         self.manager.disable()

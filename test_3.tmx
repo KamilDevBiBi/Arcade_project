@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="7" nextobjectid="1">
+ <tileset firstgid="1" name="New Piskel-1.png (7)" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="../../Downloads/New Piskel-1.png (7).png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2" name="New Piskel-1.png (7)" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="../../Downloads/New Piskel-1.png (7).png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="spritepaint (25)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
+  <image source="../../Downloads/spritepaint (25).png" width="384" height="192"/>
+ </tileset>
+ <tileset firstgid="21" name="spritepaint (5)" tilewidth="64" tileheight="64" tilecount="16" columns="4">
+  <image source="../../Downloads/spritepaint (5).png" width="256" height="256"/>
+ </tileset>
+ <layer id="1" name="collisions" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztlVEKwDAIQ3uJbWy7/z23j/VHLGqrRJgP8tdKQxNsLT+X0xk00T62VzujY2EmR7SP87tPdS/M5Khc5QLpY9Qdi3rPkD5G3bGo96xylQsvH1LWvfcFxcuHlHXvfUGpXOVi1gftQ3T+JWZ90D5E51/i77nKhuaNqJ1gQfsfiJ1gQePjAScNDGU=
+  </data>
+ </layer>
+ <layer id="3" name="fon" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAukKCyefQECkhsmYFyxCgYBUMMKAy0A0bBoAe46oWhVl+A6gUFKFsIiIWBWARNfBSMAmLBUEv/uMBo+h8F1AJDPU8oQOnRPsQooBQAAH2YAf4=
+  </data>
+ </layer>
+ <layer id="4" name="coins" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt07EJADAIRUEXcf8106YJBC0i5K4XLP6LYJevH4BBbnuodJPFO5jIlvmNzcOZPuhYoTgA6Q==
+  </data>
+ </layer>
+ <layer id="5" name="ladder_top" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzrEJADAMBDFXifef2D9DGhOQ4Pqr4ncn3dTbIwAAADwbMl8AFg==
+  </data>
+ </layer>
+ <layer id="6" name="finish" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzkEJAAAIBLDD/qENcQ8RtgRLAGjNdQAAgPcWJEgAAw==
+  </data>
+ </layer>
+ <layer id="2" name="ladders" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztz7EJADAMBDFDqlTZf9ssYXhjpAnuqtjgpAOa3HRAEx+z+Jhly8dLBwAA63wO3QBJ
+  </data>
+ </layer>
+</map>
