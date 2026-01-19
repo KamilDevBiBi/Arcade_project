@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="7" nextobjectid="1">
  <tileset firstgid="1" name="spritepaint (5)" tilewidth="64" tileheight="64" tilecount="16" columns="4">
   <image source="../../Downloads/spritepaint (5).png" width="256" height="256"/>
  </tileset>
- <tileset firstgid="17" name="spritepaint (7)" tilewidth="64" tileheight="64" tilecount="16" columns="4">
-  <image source="../../Downloads/spritepaint (7).png" width="256" height="256"/>
- </tileset>
- <tileset firstgid="33" name="spritepaint (25)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
+ <tileset firstgid="17" name="spritepaint (25)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
   <image source="../../Downloads/spritepaint (25).png" width="384" height="192"/>
  </tileset>
- <tileset firstgid="51" name="spritepaint (26)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
+ <tileset firstgid="35" name="spritepaint (26)" tilewidth="64" tileheight="64" tilecount="18" columns="6">
   <image source="../../Downloads/spritepaint (26).png" width="384" height="192"/>
+ </tileset>
+ <tileset firstgid="53" name="New Piskel-1.png (7)" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="../../Downloads/New Piskel-1.png (7).png" width="64" height="64"/>
  </tileset>
  <layer id="1" name="collisions" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgYwDRA9rKN2jtq76i9o/aOAHsZGSDlLDJmpoO9rFD9yJidDvZSAkbtpQ/AliZpjUFpHluapDUGpXkA3v4Bgw==
+   eJxjYBgYwDRAdrINgL1so/aO2jtq76i9dLaXkQFS5iFjZjrYy4pkBgyz08FecsGovfSzF1uapDUG2YstTdIag9I8AJ54Aeg=
   </data>
  </layer>
  <layer id="2" name="coins" width="30" height="20">
@@ -24,17 +24,22 @@
  </layer>
  <layer id="3" name="fon" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGwUACFgJ8WunnAGIeND464EGj0fUjq4PxnYDYGYhdiHTHcAQATWcBKg==
+   eJxjYBgFo2AUjIJRMApGwUACFgJ8WunnAGIeND464EGj0fUjq4PxjYDYGIhNiHTHcAQAHWcA+g==
   </data>
  </layer>
  <layer id="4" name="ladders" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDBWgOED2qo/aO2rvqL2j9pII7AfI3sECAJoDAcA=
+   eJxjYBgFo2AUDBUgOED2io/aO6jtJSddKFPBXnL0aY7aO2TslSVDjz4O9kgEAKF6ApA=
   </data>
  </layer>
  <layer id="5" name="ladder_top" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDAWgAsSqQKw20A4ZBaNgFIyCUUAQAACAxgBw
+   eJxjYBgFo2AUDAUgAsSiQCw20A4ZBYMKkJMu1IBYHYg1aOKiUTAKRgEIAADe4QD0
+  </data>
+ </layer>
+ <layer id="6" name="finish" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwSgYXsB0gO0HACPgADY=
   </data>
  </layer>
 </map>
